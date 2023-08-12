@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shapecms"
-version = "0.0.3"
+version = "0.0.5"
 authors = [
-  { name="Asko Nomm", email="asko@repl.ee" },
+  { name="Asko Nõmm", email="asko@repl.ee" },
 ]
 description = "A composable content management system"
 dependencies = [

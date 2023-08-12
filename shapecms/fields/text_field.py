@@ -2,9 +2,9 @@ from shapecms.shape_field import ShapeField
 
 
 class TextField(ShapeField):
-    placeholder: str = ""
-    prefix: str = ""
-    suffix: str = ""
+    placeholder: str = None
+    prefix: str = None
+    suffix: str = None
 
     def set_placeholder(self, placeholder):
         self.placeholder = placeholder
