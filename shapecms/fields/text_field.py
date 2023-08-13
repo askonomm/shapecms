@@ -1,3 +1,4 @@
+from flask import render_template
 from shapecms.shape_field import ShapeField
 
 
@@ -5,6 +6,22 @@ class TextField(ShapeField):
     placeholder: str = None
     prefix: str = None
     suffix: str = None
+
+    def __init__(self):
+        self.admin_editable = self._editable()
+
+    def _editable(self) -> callable:
+        def view(value: str) -> str:
+            context = {
+                "placeholder": self.placeholder,
+                "prefix": self.prefix,
+                "suffix": self.suffix,
+                "value": value,
+            }
+
+            return render_template("fields/text/editable.html", **context)
+
+        return view
 
     def set_placeholder(self, placeholder):
         self.placeholder = placeholder

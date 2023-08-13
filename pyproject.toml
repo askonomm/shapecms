@@ -11,6 +11,8 @@ authors = [
 description = "A composable content management system"
 dependencies = [
     "flask",
+    "SQLAlchemy",
+    "bcrypt"
 ]
 readme = "README.md"
 requires-python = ">=3.10"
