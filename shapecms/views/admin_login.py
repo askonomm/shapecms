@@ -1,12 +1,10 @@
 from uuid import uuid4
-
 import bcrypt
 from flask import session, redirect, render_template, request, flash
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
-
 from shapecms.db import User
-from shapecms.page_view import PageView, AdminPageView
+from shapecms.page_view import AdminPageView
 from shapecms.util import is_setup
 
 
@@ -21,9 +19,11 @@ class AdminLoginView(AdminPageView):
         return render_template("admin/login.html")
 
     def post(self):
+        """Attempts to authenticate the user and log them in."""
         if not is_setup(self.db):
             return redirect("/admin/setup")
 
+        # Validate e-mail
         email = request.form["email"]
 
         if not email:
@@ -32,12 +32,14 @@ class AdminLoginView(AdminPageView):
 
         password = request.form["password"]
 
+        # Validate password
         if not password:
             flash("Password is required.")
             return render_template("admin/login.html", email=email)
 
         stmt = select(User).where(User.email == email)
 
+        # Validate account and password
         with Session(self.db) as s:
             result = s.execute(stmt).scalars().first()
 
@@ -49,6 +51,7 @@ class AdminLoginView(AdminPageView):
                 flash("Incorrect password.")
                 return render_template("admin/login.html", email=email)
 
+        # Set authentication token
         with Session(self.db) as s:
             auth_token = str(uuid4())
 
