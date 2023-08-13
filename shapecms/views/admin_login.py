@@ -37,17 +37,16 @@ class AdminLoginView(AdminPageView):
             flash("Password is required.")
             return render_template("admin/login.html", email=email)
 
-        stmt = select(User).where(User.email == email)
-
         # Validate account and password
         with Session(self.db) as s:
+            stmt = select(User).where(User.email == email)
             result = s.execute(stmt).scalars().first()
 
             if result is None:
                 flash("No account found with given e-mail.")
                 return render_template("admin/login.html", email=email)
 
-            if not bcrypt.checkpw(bytes(password, "utf-8"), result.password):
+            if not bcrypt.checkpw(password.encode("utf-8"), result.password.encode("utf-8")):
                 flash("Incorrect password.")
                 return render_template("admin/login.html", email=email)
 
@@ -55,8 +54,8 @@ class AdminLoginView(AdminPageView):
         with Session(self.db) as s:
             auth_token = str(uuid4())
 
-            update_user_stmt = update(User).where(User.email == email).values(auth_token=auth_token)
-            s.execute(update_user_stmt)
+            stmt = update(User).where(User.email == email).values(auth_token=auth_token)
+            s.execute(stmt)
             s.commit()
 
             session["auth_token"] = auth_token

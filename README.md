@@ -20,20 +20,22 @@ A minimal example looks like this:
 ```python
 from shapecms import ShapeCMS
 from shapecms import PageView
-from flask import render_template
 
 
 class HomeView(PageView):
     def get(self):
-        return render_template("home.html")
+        return "Hello, world."
 
 
-shape = ShapeCMS(__name__)
-shape.add_url("/", HomeView(), "home")
+shape = ShapeCMS(__name__, "sqlite:///demo.db")
+shape.add_url("/", HomeView, "home")
 
 
 def create_app():
-    return shape.start()
+    instance = shape.start()
+    instance.secret_key = "super-secret-key"
+
+    return instance
 ```
 
 The admin panel is automatically available at the `/admin` path. If it's your first time going to the admin panel, it will guide you through a set-up process. 

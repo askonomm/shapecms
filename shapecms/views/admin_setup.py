@@ -36,7 +36,7 @@ class AdminSetupView(AdminPageView):
 
         password_encrypted = bcrypt.hashpw(bytes(password, "utf-8"), bcrypt.gensalt())
 
-        new_user = User(email=email, password=password_encrypted)
+        new_user = User(email=email, password=password_encrypted.decode("utf-8"))
 
         with Session(self.db) as session:
             session.add(new_user)
