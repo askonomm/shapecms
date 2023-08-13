@@ -41,8 +41,6 @@ class AdminLoginView(AdminPageView):
         with Session(self.db) as s:
             result = s.execute(stmt).scalars().first()
 
-            print(result.auth_token)
-
             if result is None:
                 flash("No account found with given e-mail.")
                 return render_template("admin/login.html", email=email)
