@@ -9,6 +9,7 @@ class TextField(ShapeField):
 
     def __init__(self):
         self.admin_editable = self._editable()
+        self.admin_viewable = self._viewable()
 
     def _editable(self) -> callable:
         def view(value: str) -> str:
@@ -20,6 +21,19 @@ class TextField(ShapeField):
             }
 
             return render_template("fields/text/editable.html", **context)
+
+        return view
+
+    def _viewable(self) -> callable:
+        def view(value: str) -> str:
+            context = {
+                "placeholder": self.placeholder,
+                "prefix": self.prefix,
+                "suffix": self.suffix,
+                "value": value,
+            }
+
+            return render_template("fields/text/viewable.html", **context)
 
         return view
 
