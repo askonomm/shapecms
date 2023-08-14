@@ -1,5 +1,5 @@
-from flask import session, redirect
-from shapecms.page_view import PageView, AdminPageView
+from flask import session, redirect, render_template
+from shapecms.admin_page_view import AdminPageView
 from shapecms.util import is_authenticated, is_setup
 
 
@@ -15,4 +15,8 @@ class AdminView(AdminPageView):
             return redirect("/admin/login")
 
         # todo: check for content shapes, redirect to one or show an error
-        return "hello"
+        if len(self.shapes) > 0:
+            identifier = self.shapes[0].identifier
+            return redirect("/admin/content/{identifier}".format(identifier=identifier))
+
+        return render_template("admin/no_shapes_found.html")

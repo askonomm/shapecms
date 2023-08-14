@@ -3,8 +3,9 @@ import bcrypt
 from flask import session, redirect, render_template, request, flash
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
+
+from shapecms.admin_page_view import AdminPageView
 from shapecms.db import User
-from shapecms.page_view import AdminPageView
 from shapecms.util import is_setup
 
 
