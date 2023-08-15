@@ -17,21 +17,26 @@ class ShapeCMS:
     client = None
     db: Engine = None
 
-    def __init__(self, import_name, connection_uri):
+    def __init__(self, **kwargs):
         self.app = Flask(__name__, template_folder="./templates")
-        self.client = Blueprint("client", import_name, template_folder="./templates")
+
+        # set client
+        if "import_name" in kwargs:
+            self.client = Blueprint("client", kwargs.get("import_name"), template_folder="./templates")
 
         # init db
-        self.db = create_engine(connection_uri, echo=True)
-        self.init_db()
+        if "connection_uri" in db:
+            self.db = create_engine(kwargs.get("connection_uri"), echo=True)
+            self.init_db()
+
+        # create shapes
+        if "shapes" in db:
+            self.shapes = kwargs.get("shapes")
 
         # add built-in routes
         self._add_core_url("/admin", AdminView, "admin")
         self._add_core_url("/admin/setup", AdminSetupView, "admin_setup")
         self._add_core_url("/admin/login", AdminLoginView, "admin_login")
-
-    def add_shape(self, shape_instance):
-        self.shapes.append(shape_instance)
 
     def _add_core_url(self, rule: str, view_class: Type[AdminPageView], view_name: str):
         view_func = view_class.as_view(view_name, db=self.db, shapes=self.shapes)
