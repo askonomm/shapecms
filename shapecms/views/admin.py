@@ -1,5 +1,6 @@
 from flask import session, redirect, render_template
-from shapecms.admin_page_view import AdminPageView
+
+from shapecms.page_views import AdminPageView
 from shapecms.util import is_authenticated, is_setup
 
 

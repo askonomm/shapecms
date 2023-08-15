@@ -1,15 +1,27 @@
 from flask import render_template
-from shapecms.shape_field import ShapeField
+
+from shapecms.fields.base import BaseField
 
 
-class TextField(ShapeField):
+class TextField(BaseField):
     placeholder: str = None
     prefix: str = None
     suffix: str = None
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
         self.admin_editable = self._editable()
         self.admin_viewable = self._viewable()
+
+        if "placeholder" in kwargs:
+            self.placeholder = kwargs.get("placeholder")
+
+        if "prefix" in kwargs:
+            self.prefix = kwargs.get("prefix")
+
+        if "suffix" in kwargs:
+            self.suffix = kwargs.get("suffix")
 
     def _editable(self) -> callable:
         def view(value: str) -> str:
@@ -36,12 +48,3 @@ class TextField(ShapeField):
             return render_template("fields/text/viewable.html", **context)
 
         return view
-
-    def set_placeholder(self, placeholder):
-        self.placeholder = placeholder
-
-    def set_prefix(self, prefix):
-        self.prefix = prefix
-
-    def set_suffix(self, suffix):
-        self.suffix = suffix

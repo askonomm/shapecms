@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Engine
 
 from shapecms.db import Base
 from shapecms.shape import Shape
-from shapecms.page_view import PageView, AdminPageView
+from shapecms.page_views import PageView, AdminPageView
 from shapecms.views.admin import AdminView
 from shapecms.views.admin_login import AdminLoginView
 from shapecms.views.admin_setup import AdminSetupView

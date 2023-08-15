@@ -1,5 +1,10 @@
 from typing import List
-from shapecms.shape_field import ShapeField
+
+from shapecms.fields.base import BaseField
+
+
+class ShapeOpts:
+    site_url: str
 
 
 class Shape:
@@ -8,10 +13,20 @@ class Shape:
     name: str = ""
     singular_name: str = ""
     admin_list_view_fields: List[str] = []
-    fields: List[ShapeField] = []
+    fields: List[BaseField] = []
 
-    def set_identifier(self, identifier):
-        self.identifier = identifier
+    def __init__(self, **kwargs):
+        if "identifier" in kwargs:
+            self.identifier = kwargs.get("identifier")
 
-    def add_field(self, field: ShapeField):
-        self.fields.append(field)
+        if "name" in kwargs:
+            self.name = kwargs.get("name")
+
+        if "singular_name" in kwargs:
+            self.singular_name = kwargs.get("singular_name")
+
+        if "admin_list_view_fields" in kwargs:
+            self.admin_list_view_fields = kwargs.get("admin_list_view_fields")
+
+        if "fields" in kwargs:
+            self.fields = kwargs.get("fields")
