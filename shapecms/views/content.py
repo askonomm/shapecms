@@ -15,13 +15,13 @@ class ContentView(AdminPageView):
         if not is_authenticated(self.db, session):
             return redirect("/admin/login")
 
-        active_shape = next((x for x in self.shapes if x.identifier == identifier), None)
+        curr_shape = next((x for x in self.shapes if x.identifier == identifier), None)
 
-        if not active_shape:
+        if not curr_shape:
             return redirect("/admin")
 
         context = {
-            "shape": active_shape
+            "shape": curr_shape
         }
 
         return render_template("admin/content.html", **context)
