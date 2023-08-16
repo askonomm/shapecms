@@ -1,5 +1,5 @@
 from typing import List, Type
-from flask import Flask, Blueprint, request
+from flask import Flask, Blueprint
 from sqlalchemy import create_engine, Engine
 
 from shapecms.db import Base
