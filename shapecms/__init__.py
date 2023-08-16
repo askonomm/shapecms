@@ -1,10 +1,11 @@
 from typing import List, Type
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, request
 from sqlalchemy import create_engine, Engine
 
 from shapecms.db import Base
 from shapecms.shape import Shape
 from shapecms.page_views import PageView, AdminPageView
+from shapecms.views.content import ContentView
 from shapecms.views.main import MainView
 from shapecms.views.login import LoginView
 from shapecms.views.setup import SetupView
@@ -34,11 +35,12 @@ class ShapeCMS:
             self.shapes = kwargs.get("shapes")
 
         # add built-in routes
-        self._add_view("/admin", MainView)
-        self._add_view("/admin/setup", SetupView)
-        self._add_view("/admin/login", LoginView)
+        self.__add_view("/admin", MainView)
+        self.__add_view("/admin/setup", SetupView)
+        self.__add_view("/admin/login", LoginView)
+        self.__add_view("/admin/content/<identifier>", ContentView)
 
-    def _add_view(self, path: str, view_class: Type[AdminPageView]):
+    def __add_view(self, path: str, view_class: Type[AdminPageView]):
         view_name = view_class.__name__
         view_func = view_class.as_view(view_name, db=self.db, shapes=self.shapes)
         self.app.add_url_rule(path, view_func=view_func)

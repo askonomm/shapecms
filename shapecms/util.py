@@ -1,8 +1,10 @@
+from flask import request
 from flask.sessions import SessionMixin
 from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
 
 from shapecms.db import User
+from shapecms.shape import ShapeOpts
 
 
 def is_authenticated(db: Engine, session: SessionMixin) -> bool:
@@ -25,3 +27,4 @@ def is_setup(db: Engine) -> bool:
         results = session.execute(stmt)
 
         return results.first() is not None
+

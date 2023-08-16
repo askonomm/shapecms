@@ -1,5 +1,6 @@
 from typing import List
 
+from flask import request
 from flask.views import MethodView
 from sqlalchemy import Engine
 
@@ -23,4 +24,6 @@ class AdminPageView(MethodView):
             self.db = kwargs.get("db")
 
         if "shapes" in kwargs:
-            self.shapes = kwargs.get("shapes")
+            for shape_callable in kwargs.get("shapes"):
+                shape_instance = shape_callable(request)
+                self.shapes.append(shape_instance)
