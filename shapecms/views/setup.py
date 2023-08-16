@@ -6,7 +6,7 @@ from shapecms.page_views import AdminPageView
 from shapecms.util import is_setup
 
 
-class AdminSetupView(AdminPageView):
+class SetupView(AdminPageView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

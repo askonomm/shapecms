@@ -4,7 +4,7 @@ from shapecms.page_views import AdminPageView
 from shapecms.util import is_authenticated, is_setup
 
 
-class AdminView(AdminPageView):
+class MainView(AdminPageView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
