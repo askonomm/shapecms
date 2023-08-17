@@ -24,12 +24,17 @@ class ContentView(AdminPageView):
                 identifiers.append(field.identifier)
 
         return identifiers
+    
+    def __realize_field_viewables(self, fields: List[dict]):
+        pass
 
     def __get_content_items(self, shape_identifier: str):
         with Session(self.db) as s:
             items = []
             stmt = select(Content).where(Content.shape_identifier == shape_identifier)
             result = s.execute(stmt).scalars().all()
+
+            print(result)
 
             for result_item in result:
                 fields_stmt = select(ContentField).where(ContentField.content_id == result_item.id)

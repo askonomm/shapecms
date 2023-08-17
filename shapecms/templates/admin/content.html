@@ -1,3 +1,11 @@
 <h2>{{ shape.name }}</h2>
 
-Content goes here
+<a href="/admin/content/{{ shape.identifier }}/add">
+  Add {{ shape.singular_name }}
+</a>
+
+{% if items %} .. items {% else %}
+
+<p>You have not created any items yet.</p>
+
+{% endif %}
