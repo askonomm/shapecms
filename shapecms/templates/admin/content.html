@@ -4,7 +4,15 @@
   Add {{ shape.singular_name }}
 </a>
 
-{% if items %} .. items {% else %}
+{% if items %} {% for item in items %}
+
+<div class="item">
+  <a href="/admin/content/{{ shape.identifier }}/edit/{{ item.id }}">
+    {% for viewable in item.viewables %} {{ viewable|safe }} {% endfor %}
+  </a>
+</div>
+
+{% endfor %} {% else %}
 
 <p>You have not created any items yet.</p>
 

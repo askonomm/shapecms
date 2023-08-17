@@ -16,33 +16,34 @@ class ContentView(AdminPageView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def __get_field_identifiers_in_shape(self) -> List[str]:
-        identifiers = []
+    def __list_view_viewables(self, s: Session, content_id: int) -> List[str]:
+        result = []
+        admin_list_view_fields = self.current_shape.admin_list_view_fields
 
-        for field in self.current_shape.fields:
-            if identifiers.count(field.identifier) == 0:
-                identifiers.append(field.identifier)
+        for field in admin_list_view_fields:
+            field_instance = next((x for x in self.current_shape.fields if x.identifier == field), None)
+            
+            stmt = (
+                select(ContentField)
+                .where(ContentField.content_id == content_id)
+                .where(ContentField.identifier == field_instance.identifier)
+            )
 
-        return identifiers
-    
-    def __realize_field_viewables(self, fields: List[dict]):
-        pass
+            field_value = s.execute(stmt).scalars().first()
+            result.append(field_instance.admin_viewable(field_value))
 
-    def __get_content_items(self, shape_identifier: str):
+        return result
+
+    def __content_items(self, shape_identifier: str):
         with Session(self.db) as s:
             items = []
             stmt = select(Content).where(Content.shape_identifier == shape_identifier)
             result = s.execute(stmt).scalars().all()
 
-            print(result)
-
             for result_item in result:
-                fields_stmt = select(ContentField).where(ContentField.content_id == result_item.id)
-                fields = s.execute(fields_stmt).scalars().all()
-
                 items.append({
                     "id": result_item.id,
-                    "fields": filter(lambda x: self.__get_field_identifiers_in_shape().count(x.identifier), fields)
+                    "viewables": self.__list_view_viewables(s, result_item.id)
                 })
 
             return items
@@ -61,7 +62,7 @@ class ContentView(AdminPageView):
 
         context = {
             "shape": self.current_shape,
-            "items": self.__get_content_items(self.current_shape.identifier)
+            "items": self.__content_items(self.current_shape.identifier)
         }
 
         return render_template("admin/content.html", **context)

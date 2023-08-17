@@ -37,7 +37,13 @@ class TextField(BaseField):
         return view
 
     def _viewable(self) -> callable:
-        def view(value: str) -> str:
+        def view(value: str | None) -> str:
+            if not value and self.placeholder:
+                value = self.placeholder
+
+            if not value and not self.placeholder:
+                value = ""
+
             context = {
                 "placeholder": self.placeholder,
                 "prefix": self.prefix,
