@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "shapecms"
-version = "0.0.9"
+version = "0.0.11"
 authors = [
   { name="Asko Nõmm", email="asko@repl.ee" },
 ]

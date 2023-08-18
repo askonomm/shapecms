@@ -1,10 +1,11 @@
-from typing import List
-from flask import redirect, render_template
+from typing import List, Dict, Any
+from flask import redirect, render_template, session
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from shapecms.db import ContentField
 from shapecms.page_views import AdminPageView
 from shapecms.shape import Shape
+from shapecms.util import is_setup, is_authenticated
 
 
 class ContentEditView(AdminPageView):
@@ -13,9 +14,9 @@ class ContentEditView(AdminPageView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def __fields(self, content_id: int) -> List[str]:
+    def __fields(self, content_id: int) -> list[dict[str, str | Any]]:
         """
-        Given `content_id`, compose and return a list of editable fields 
+        Given `content_id`, compose and return a list of editable fields
         for the content edit view.
         """
         result = []
@@ -29,26 +30,41 @@ class ContentEditView(AdminPageView):
                     .where(ContentField.identifier == field.identifier)
                 )
 
-                field_value = s.execute(stmt).scalars().first()
+                field_data = s.execute(stmt).scalars().first()
+                field_value = ""
 
-                result.append({
-                    "name": field.name,
-                    "identifier": field.identifier,
-                    "editable": field.admin_editable(field_value)
-                })
+                if field_data:
+                    field_value = field_data.value
+
+                result.append(
+                    {
+                        "name": field.name,
+                        "identifier": field.identifier,
+                        "editable": field.admin_editable(content_id, field_value),
+                    }
+                )
 
         return result
 
     def get(self, identifier: str, id: int):
+        if not is_setup(self.db):
+            return redirect("/admin/setup")
+
+        if not is_authenticated(self.db, session):
+            return redirect("/admin/login")
+
         self.current_shape = next(
-            (x for x in self.shapes if x.identifier == identifier), None)
+            (x for x in self.shapes if x.identifier == identifier), None
+        )
 
         if not self.current_shape:
             return redirect("/admin")
 
         context = {
             "shape_identifier": identifier,
-            "fields": self.__fields(id)
+            "fields": self.__fields(id),
+            "injected_css": self.compute_injected_css(),
+            "injected_js": self.compute_injected_js(),
         }
 
         return render_template("admin/content_edit.html", **context)

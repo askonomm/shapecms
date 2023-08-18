@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, Engine
 from shapecms.db import Base
 from shapecms.shape import Shape
 from shapecms.page_views import PageView, AdminPageView
+from shapecms.views.api.update_field import APIUpdateFieldView
 from shapecms.views.content import ContentView
 from shapecms.views.content_add import ContentAddView
 from shapecms.views.content_edit import ContentEditView
@@ -25,35 +26,47 @@ class ShapeCMS:
 
         # set client
         if "import_name" in kwargs:
-            self.client = Blueprint("client", kwargs.get("import_name"), template_folder="./templates")
+            self.client = Blueprint("client", kwargs.get(
+                "import_name"), template_folder="./templates")
 
         # init db
         if "connection_uri" in kwargs:
             self.db = create_engine(kwargs.get("connection_uri"), echo=True)
-            self.init_db()
+            self.__init_db()
 
         # create shapes
         if "shapes" in kwargs:
             self.shapes = kwargs.get("shapes")
 
-        # add built-in routes
-        self.__add_view("/admin", MainView)
-        self.__add_view("/admin/setup", SetupView)
-        self.__add_view("/admin/login", LoginView)
-        self.__add_view("/admin/content/<identifier>", ContentView)
-        self.__add_view("/admin/content/<identifier>/add", ContentAddView)
-        self.__add_view("/admin/content/<identifier>/edit/<id>", ContentEditView)
+        # create views
+        if "views" in kwargs:
+            for path, view in kwargs.get("views").items():
+                self.__add_view(path, view)
 
-    def __add_view(self, path: str, view_class: Type[AdminPageView]):
+        # add built-in routes
+        self.__add_admin_view("/admin", MainView)
+        self.__add_admin_view("/admin/setup", SetupView)
+        self.__add_admin_view("/admin/login", LoginView)
+        self.__add_admin_view("/admin/content/<identifier>", ContentView)
+        self.__add_admin_view(
+            "/admin/content/<identifier>/add", ContentAddView)
+        self.__add_admin_view(
+            "/admin/content/<identifier>/edit/<id>", ContentEditView)
+        self.__add_admin_view(
+            "/admin/api/content/<content_id>/field/<f_id>", APIUpdateFieldView)
+
+    def __add_admin_view(self, path: str, view_class: Type[AdminPageView]):
         view_name = view_class.__name__
-        view_func = view_class.as_view(view_name, db=self.db, shapes=self.shapes)
+        view_func = view_class.as_view(
+            view_name, db=self.db, shapes=self.shapes)
         self.app.add_url_rule(path, view_func=view_func)
 
-    def add_view(self, path: str, view_class: Type[PageView]):
+    def __add_view(self, path: str, view_class: Type[PageView]):
         view_name = view_class.__name__
-        self.client.add_url_rule(path, view_func=view_class.as_view(view_name, db=self.db))
+        self.client.add_url_rule(
+            path, view_func=view_class.as_view(view_name, db=self.db))
 
-    def init_db(self):
+    def __init_db(self):
         Base.metadata.create_all(self.db)
 
     def start(self):

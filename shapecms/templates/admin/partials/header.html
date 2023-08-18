@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shape CMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/style.css") }}">
+    {% for css in injected_css %}
+        <link rel="stylesheet" href="{{ url_for('static', filename=css) }}">
+    {% endfor %}
+    <script src="{{ url_for('static', filename="js/htmx.js") }}"></script>
+    {% for js in injected_js %}
+        <script src="{{ url_for('static', filename=js) }}"></script>
+    {% endfor %}
+</head>
+<body>

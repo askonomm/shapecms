@@ -27,3 +27,25 @@ class AdminPageView(MethodView):
             for shape_callable in kwargs.get("shapes"):
                 shape_instance = shape_callable(request)
                 self.shapes.append(shape_instance)
+
+    def compute_injected_css(self) -> List[str]:
+        css = []
+
+        for shape in self.shapes:
+            for field in shape.fields:
+                for css_item in field.injected_css:
+                    if css.count(css_item) == 0:
+                        css.append(css_item)
+
+        return css
+
+    def compute_injected_js(self) -> List[str]:
+        css = []
+
+        for shape in self.shapes:
+            for field in shape.fields:
+                for css_item in field.injected_css:
+                    if css.count(css_item) == 0:
+                        css.append(css_item)
+
+        return css
