@@ -11,8 +11,9 @@ class TextField(BaseField):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.admin_editable = self._editable()
-        self.admin_viewable = self._viewable()
+        self.output = self.__output()
+        self.admin_editable = self.__editable()
+        self.admin_viewable = self.__viewable()
 
         if "placeholder" in kwargs:
             self.placeholder = kwargs.get("placeholder")
@@ -23,8 +24,28 @@ class TextField(BaseField):
         if "suffix" in kwargs:
             self.suffix = kwargs.get("suffix")
 
-    def _editable(self) -> callable:
-        def view(value: str) -> str:
+    def __output(self) -> callable:
+        """
+        Returns a callable which transforms the field value into 
+        appropriate form.
+        """
+        def call(value: str | None) -> str:
+            if value:
+                return value
+
+            return ""
+
+        return call
+
+    def __editable(self) -> callable:
+        """
+        Returns a callable which outputs an editable, self-updating
+        field.
+        """
+        def view(value: str | None) -> str:
+            if value is None:
+                value = ""
+
             context = {
                 "placeholder": self.placeholder,
                 "prefix": self.prefix,
@@ -36,7 +57,10 @@ class TextField(BaseField):
 
         return view
 
-    def _viewable(self) -> callable:
+    def __viewable(self) -> callable:
+        """
+        Returns a callable which outputs a viewable field.
+        """
         def view(value: str | None) -> str:
             if not value and self.placeholder:
                 value = self.placeholder

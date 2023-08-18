@@ -1,21 +1,19 @@
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul class="flashes">
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
 
 <form method="post">
-    <label>
-        E-mail
-        <input type="email" name="email" value="{{ email }}">
-    </label>
-    <label>
-        Password
-        <input type="password" name="password">
-    </label>
-    <button type="submit">Set up</button>
+  <label>
+    E-mail
+    <input type="email" name="email" value="{{ email }}" />
+  </label>
+  <label>
+    Password
+    <input type="password" name="password" />
+  </label>
+  <button type="submit">Set up</button>
 </form>
