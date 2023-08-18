@@ -18,8 +18,7 @@ pip install shapecms
 A minimal example looks like this:
 
 ```python
-from shapecms import ShapeCMS
-from shapecms import PageView
+from shapecms import ShapeCMS, PageView
 
 
 class HomeView(PageView):
@@ -27,12 +26,16 @@ class HomeView(PageView):
         return "Hello, world."
 
 
-shape = ShapeCMS(__name__, "sqlite:///demo.db")
-shape.add_url("/", HomeView, "home")
+app = ShapeCMS(
+    import_name=__name__,
+    connection_uri="sqlite:///demo.db",
+    shapes=[],
+    views={"/": HomeView}
+)
 
 
 def create_app():
-    instance = shape.start()
+    instance = app.start()
     instance.secret_key = "super-secret-key"
 
     return instance
@@ -44,4 +47,30 @@ Note however that until you add any Content Shapes the admin panel will be empty
 
 ## Adding Content Shapes
 
-To be written.
+An example Content Shape looks like this:
+
+```python
+from flask import Request
+from shapecms.fields.text import TextField
+from shapecms.shape import Shape
+
+def blog_post(request: Request) -> Shape:
+    return Shape(
+        identifier="post",
+        name="Blog Posts",
+        singular_name="Blog Post",
+        admin_list_view_fields=["title"],
+        fields=[
+            TextField(
+                identifier="title", name="Post Title", placeholder="Untitled ..."
+            ),
+            TextField(
+                identifier="slug",
+                name="URL",
+                prefix="{url}blog/".format(url=request.host_url),
+            ),
+        ],
+    )
+```
+
+Pass all your content shapes into the `shapes` array when initializing ShapeCMS as references, and you're all set.
