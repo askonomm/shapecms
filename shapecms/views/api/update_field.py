@@ -30,6 +30,7 @@ class APIUpdateFieldView(AdminPageView):
                 (x for x in content_item.fields if x.identifier == f_id), None
             )
 
+            # If the field does not exist, create it
             if not field_exists:
                 create_stmt = insert(ContentField).values(
                     content_id=content_id,
@@ -39,6 +40,8 @@ class APIUpdateFieldView(AdminPageView):
 
                 s.execute(create_stmt)
                 s.commit()
+
+            # And if it does, update it.
             else:
                 update_stmt = (
                     update(ContentField)
