@@ -1,13 +1,12 @@
 from typing import List
 
-from flask import redirect, session, render_template
+from flask import redirect, render_template
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from shapecms import Shape
 from shapecms.db import Content, ContentField
 from shapecms.page_views import AdminPageView
-from shapecms.util import is_setup, is_authenticated
 
 
 class ContentView(AdminPageView):
@@ -70,10 +69,10 @@ class ContentView(AdminPageView):
             return items
 
     def get(self, identifier: str):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return redirect("/admin/setup")
 
-        if not is_authenticated(self.db, session):
+        if not self.is_authenticated():
             return redirect("/admin/login")
 
         self.current_shape = next(

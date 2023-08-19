@@ -4,7 +4,6 @@ from shapecms import AdminPageView
 from sqlalchemy.orm import Session
 
 from shapecms.db import Content, ContentField
-from shapecms.util import is_setup, is_authenticated
 
 
 class APIUpdateFieldView(AdminPageView):
@@ -12,10 +11,10 @@ class APIUpdateFieldView(AdminPageView):
         super().__init__(**kwargs)
 
     def post(self, content_id: str, f_id: str):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return {"error": "Shape CMS is not set up."}
 
-        if not is_authenticated(self.db, session):
+        if not self.is_authenticated():
             return {"error": "You don't have permission to do this."}
 
         if f_id not in request.form:

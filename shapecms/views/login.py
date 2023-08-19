@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 
 from shapecms.db import User
 from shapecms.page_views import AdminPageView
-from shapecms.util import is_setup
 
 
 class LoginView(AdminPageView):
@@ -14,14 +13,14 @@ class LoginView(AdminPageView):
         super().__init__(**kwargs)
 
     def get(self):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return redirect("/admin/setup")
 
         return render_template("admin/login.html")
 
     def post(self):
         """Attempts to authenticate the user and log them in."""
-        if not is_setup(self.db):
+        if not self.is_setup():
             return redirect("/admin/setup")
 
         # Validate e-mail

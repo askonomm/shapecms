@@ -1,7 +1,6 @@
-from flask import session, redirect, render_template
+from flask import redirect, render_template
 
 from shapecms.page_views import AdminPageView
-from shapecms.util import is_authenticated, is_setup
 
 
 class MainView(AdminPageView):
@@ -9,10 +8,10 @@ class MainView(AdminPageView):
         super().__init__(**kwargs)
 
     def get(self):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return redirect("/admin/setup")
 
-        if not is_authenticated(self.db, session):
+        if not self.is_authenticated():
             return redirect("/admin/login")
 
         # todo: check for content shapes, redirect to one or show an error
