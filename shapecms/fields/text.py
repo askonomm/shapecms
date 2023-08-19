@@ -14,7 +14,7 @@ class TextField(BaseField):
         self.output = self.__output()
         self.admin_editable = self.__editable()
         self.admin_viewable = self.__viewable()
-        self.injected_css = ["fields/text/text.css"]
+        self.injected_css = ["fields/text/text"]
 
         if "placeholder" in kwargs:
             self.placeholder = kwargs.get("placeholder")

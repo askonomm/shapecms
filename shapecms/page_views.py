@@ -34,18 +34,22 @@ class AdminPageView(MethodView):
         for shape in self.shapes:
             for field in shape.fields:
                 for css_item in field.injected_css:
-                    if css.count(css_item) == 0:
-                        css.append(css_item)
+                    css_item_full = "{css}.css".format(css=css_item)
+
+                    if css.count(css_item_full) == 0:
+                        css.append(css_item_full)
 
         return css
 
     def compute_injected_js(self) -> List[str]:
-        css = []
+        js = []
 
         for shape in self.shapes:
             for field in shape.fields:
-                for css_item in field.injected_css:
-                    if css.count(css_item) == 0:
-                        css.append(css_item)
+                for js_item in field.injected_js:
+                    js_item_full = "{js}.js".format(js=js_item)
 
-        return css
+                    if js.count(js_item_full) == 0:
+                        js.append(js_item_full)
+
+        return js
