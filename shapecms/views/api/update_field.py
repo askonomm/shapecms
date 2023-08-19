@@ -1,4 +1,4 @@
-from flask import redirect, session, request
+from flask import session, request
 from sqlalchemy import select, insert, update
 from shapecms import AdminPageView
 from sqlalchemy.orm import Session
