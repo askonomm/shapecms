@@ -1,10 +1,12 @@
 from typing import List
 
-from flask import request
+from flask import request, session
 from flask.views import MethodView
-from sqlalchemy import Engine
+from sqlalchemy import Engine, select
+from sqlalchemy.orm import Session
 
 from shapecms import Shape
+from shapecms.db import User
 
 
 class PageView(MethodView):
@@ -27,6 +29,22 @@ class AdminPageView(MethodView):
             for shape_callable in kwargs.get("shapes"):
                 shape_instance = shape_callable(request)
                 self.shapes.append(shape_instance)
+
+    def is_authenticated(self) -> bool:
+        if "auth_token" in session:
+            token: str = session.get("auth_token")
+            stmt = select(User).where(User.auth_token == token)
+
+            with Session(self.db) as s:
+                return s.execute(stmt).first() is not None
+
+        return False
+
+    def is_setup(self) -> bool:
+        stmt = select(User)
+
+        with Session(self.db) as s:
+            return s.execute(stmt).first() is not None
 
     def compute_injected_css(self) -> List[str]:
         css = []

@@ -3,7 +3,6 @@ from flask import redirect, render_template, request, flash
 from sqlalchemy.orm import Session
 from shapecms.db import User
 from shapecms.page_views import AdminPageView
-from shapecms.util import is_setup
 
 
 class SetupView(AdminPageView):
@@ -11,13 +10,13 @@ class SetupView(AdminPageView):
         super().__init__(**kwargs)
 
     def get(self):
-        if is_setup(self.db):
+        if self.is_setup():
             return redirect("/admin")
 
         return render_template("admin/setup.html")
 
     def post(self):
-        if is_setup(self.db):
+        if self.is_setup():
             return redirect("/admin")
 
         email = request.form["email"]

@@ -1,10 +1,9 @@
-from flask import redirect, session, request
+from flask import session, request
 from sqlalchemy import select, insert, update
 from shapecms import AdminPageView
 from sqlalchemy.orm import Session
 
 from shapecms.db import Content, ContentField
-from shapecms.util import is_setup, is_authenticated
 
 
 class APIUpdateFieldView(AdminPageView):
@@ -12,10 +11,10 @@ class APIUpdateFieldView(AdminPageView):
         super().__init__(**kwargs)
 
     def post(self, content_id: str, f_id: str):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return {"error": "Shape CMS is not set up."}
 
-        if not is_authenticated(self.db, session):
+        if not self.is_authenticated():
             return {"error": "You don't have permission to do this."}
 
         if f_id not in request.form:
@@ -30,6 +29,7 @@ class APIUpdateFieldView(AdminPageView):
                 (x for x in content_item.fields if x.identifier == f_id), None
             )
 
+            # If the field does not exist, create it
             if not field_exists:
                 create_stmt = insert(ContentField).values(
                     content_id=content_id,
@@ -39,6 +39,8 @@ class APIUpdateFieldView(AdminPageView):
 
                 s.execute(create_stmt)
                 s.commit()
+
+            # And if it does, update it.
             else:
                 update_stmt = (
                     update(ContentField)

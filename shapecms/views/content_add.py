@@ -1,9 +1,8 @@
-from flask import redirect, session
+from flask import redirect
 from sqlalchemy import insert
 from sqlalchemy.orm import Session
 from shapecms.db import Content
 from shapecms.page_views import AdminPageView
-from shapecms.util import is_authenticated, is_setup
 
 
 class ContentAddView(AdminPageView):
@@ -11,10 +10,10 @@ class ContentAddView(AdminPageView):
         super().__init__(**kwargs)
 
     def get(self, identifier: str):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return redirect("/admin/setup")
 
-        if not is_authenticated(self.db, session):
+        if not self.is_authenticated():
             return redirect("/admin/login")
 
         current_shape = next(

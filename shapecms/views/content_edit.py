@@ -1,11 +1,10 @@
-from typing import List, Dict, Any
-from flask import redirect, render_template, session
+from typing import Any
+from flask import redirect, render_template
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from shapecms.db import ContentField
 from shapecms.page_views import AdminPageView
 from shapecms.shape import Shape
-from shapecms.util import is_setup, is_authenticated
 
 
 class ContentEditView(AdminPageView):
@@ -47,10 +46,10 @@ class ContentEditView(AdminPageView):
         return result
 
     def get(self, identifier: str, id: int):
-        if not is_setup(self.db):
+        if not self.is_setup():
             return redirect("/admin/setup")
 
-        if not is_authenticated(self.db, session):
+        if not self.is_authenticated():
             return redirect("/admin/login")
 
         self.current_shape = next(
