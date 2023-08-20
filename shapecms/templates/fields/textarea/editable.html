@@ -1,0 +1,7 @@
+<div class="field field--editable field--textarea">
+    <textarea
+        name="{{ identifier }}"
+        placeholder="{{ placeholder }}"
+        hx-post="/admin/api/content/{{ content_id }}/field/{{ identifier }}"
+        hx-trigger="input changed delay:250ms">{{ value }}</textarea>
+</div>
