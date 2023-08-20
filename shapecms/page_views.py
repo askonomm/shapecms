@@ -38,8 +38,6 @@ class AdminPageView(MethodView):
             with Session(self.db) as s:
                 return s.execute(stmt).first() is not None
 
-        return False
-
     def is_setup(self) -> bool:
         stmt = select(User)
 
