@@ -3,16 +3,9 @@ from typing import List
 from shapecms.fields.base import BaseField
 
 
-class ShapeOpts:
-    site_url: str
-
-    def __init__(self, **kwargs):
-        if "site_url" in kwargs:
-            self.site_url = kwargs.get("site_url")
-
-
 class Shape:
     """Class representing a Content Shape"""
+
     identifier: str = ""
     name: str = ""
     singular_name: str = ""
