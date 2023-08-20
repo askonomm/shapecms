@@ -17,7 +17,8 @@ class ContentAddView(AdminPageView):
             return redirect("/admin/login")
 
         current_shape = next(
-            (x for x in self.shapes if x.identifier == identifier), None)
+            (x for x in self.shapes if x.identifier == identifier), None
+        )
 
         if not current_shape:
             return redirect("/admin")
@@ -28,4 +29,4 @@ class ContentAddView(AdminPageView):
 
             s.commit()
 
-            return redirect("/admin/content/{identifier}/edit/{id}".format(identifier=identifier, id=id))
+            return redirect(f"/admin/content/{identifier}/edit/{id}")
