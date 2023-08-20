@@ -84,6 +84,7 @@ class ContentView(AdminPageView):
 
         context = {
             "shape": self.current_shape,
+            "shapes": self.shapes,
             "items": self.__content_items(self.current_shape.identifier),
             "injected_css": self.compute_injected_css(),
             "injected_js": self.compute_injected_js(),

@@ -1,0 +1,9 @@
+<div class="absolute -left-[200px]">
+    <ul>
+        {% for shape in shapes %}
+        <li><a href="/admin/content/{{ shape.identifier }}">{{ shape.name }}</a></li>
+        {% endfor %}
+
+        <li><a href="/admin/logout">Log out</a></li>
+    </ul>
+</div>

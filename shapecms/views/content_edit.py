@@ -61,6 +61,7 @@ class ContentEditView(AdminPageView):
 
         context = {
             "shape_identifier": identifier,
+            "shapes": self.shapes,
             "fields": self.__fields(id),
             "injected_css": self.compute_injected_css(),
             "injected_js": self.compute_injected_js(),

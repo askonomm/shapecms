@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "tw": "npx tailwindcss -i ./shapecms/static/css/style.css -o ./shapecms/static/css/style.min.css --minify",
+    "tw-dev": "npx tailwindcss -i ./shapecms/static/css/style.css -o ./shapecms/static/css/style.min.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.3"
+  }
+}
