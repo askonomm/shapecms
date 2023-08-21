@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .sidebar-link {
+        @apply font-medium text-slate-500 hover:text-slate-800;
+    }
+
+    .page-header {
+        @apply flex items-center mb-5;
+    }
+
+    .page-title {
+        @apply text-xl text-slate-950 mr-5;
+    }
+
+    .page-action-btn {
+        @apply border border-blue-600 text-xs font-semibold text-white
+        px-3 py-1 rounded-xl bg-gradient-to-b from-blue-400 to-blue-500;
+    }
+}

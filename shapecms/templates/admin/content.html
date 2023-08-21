@@ -1,10 +1,12 @@
 {% include "admin/partials/header.html" %}
 
-<h2>{{ shape.name }}</h2>
+<div class="page-header">
+    <h2 class="page-title">{{ shape.name }}</h2>
 
-<a href="/admin/content/{{ shape.identifier }}/add">
-  Add {{ shape.singular_name }}
-</a>
+    <a class="page-action-btn" href="/admin/content/{{ shape.identifier }}/add">
+      Add {{ shape.singular_name }}
+    </a>
+</div>
 
 {% if items %} {% for item in items %}
 
