@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Self
 
 from shapecms.fields.base import BaseField
 
@@ -27,3 +27,6 @@ class Shape:
 
         if "fields" in kwargs:
             self.fields = kwargs.get("fields")
+
+    def __eq__(self, compared_to: Self):
+        return self.identifier == compared_to.identifier

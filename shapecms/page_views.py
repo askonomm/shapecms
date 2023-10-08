@@ -28,7 +28,9 @@ class AdminPageView(MethodView):
         if "shapes" in kwargs:
             for shape_callable in kwargs.get("shapes"):
                 shape_instance = shape_callable(request)
-                self.shapes.append(shape_instance)
+
+                if shape_instance not in self.shapes:
+                    self.shapes.append(shape_instance)
 
     def is_authenticated(self) -> bool:
         if "auth_token" in session:

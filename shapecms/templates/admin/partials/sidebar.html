@@ -1,0 +1,13 @@
+<div class="absolute -left-[200px]">
+    <ul>
+        {% for shape in shapes %}
+        <li class="mb-1">
+            <a class="sidebar-link" href="/admin/content/{{ shape.identifier }}">{{ shape.name }}</a>
+        </li>
+        {% endfor %}
+
+        <li>
+            <a class="sidebar-link" href="/admin/logout">Log out</a>
+        </li>
+    </ul>
+</div>

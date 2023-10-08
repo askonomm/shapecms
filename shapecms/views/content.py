@@ -29,19 +29,20 @@ class ContentView(AdminPageView):
                 (x for x in curr_fields if x.identifier == field), None
             )
 
-            stmt = (
-                select(ContentField)
-                .where(ContentField.content_id == content_id)
-                .where(ContentField.identifier == field_instance.identifier)
-            )
+            if field_instance:
+                stmt = (
+                    select(ContentField)
+                    .where(ContentField.content_id == content_id)
+                    .where(ContentField.identifier == field_instance.identifier)
+                )
 
-            field_data = s.execute(stmt).scalars().first()
-            field_value = ""
+                field_data = s.execute(stmt).scalars().first()
+                field_value = ""
 
-            if field_data:
-                field_value = field_data.value
+                if field_data:
+                    field_value = field_data.value
 
-            result.append(field_instance.admin_viewable(field_value))
+                result.append(field_instance.admin_viewable(field_value))
 
         return result
 
@@ -79,11 +80,14 @@ class ContentView(AdminPageView):
             (x for x in self.shapes if x.identifier == identifier), None
         )
 
+        print(self.current_shape.identifier)
+
         if not self.current_shape:
             return redirect("/admin")
 
         context = {
             "shape": self.current_shape,
+            "shapes": self.shapes,
             "items": self.__content_items(self.current_shape.identifier),
             "injected_css": self.compute_injected_css(),
             "injected_js": self.compute_injected_js(),

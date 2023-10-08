@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Shape CMS</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename="css/style.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/style.min.css") }}">
     {% for css in injected_css %}
         <link rel="stylesheet" href="{{ url_for('static', filename=css) }}">
     {% endfor %}
@@ -12,4 +12,8 @@
         <script src="{{ url_for('static', filename=js) }}"></script>
     {% endfor %}
 </head>
-<body>
+<body class="bg-slate-50 w-full">
+
+    <div class="flex w-full place-content-center py-16">
+        <div class="w-[650px] relative">
+            {% include "admin/partials/sidebar.html" %}
